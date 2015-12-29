@@ -1,0 +1,543 @@
+import  java.util.*;
+import  javax.swing.*;
+import  java.awt.Color;
+import static java.awt.Color.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import javax.swing.JFrame;
+
+public class Classes {
+    static int[] scores = new int[3];
+    static String[] names = new String[3];
+    static Color prevColor = null;
+    static int score1;
+    static int score2;
+    public static void welcome(){
+        //pop ups joptionpain with welcome message
+        JOptionPane.showMessageDialog(null, 
+                "Coloration: An interactive multiplayer game",
+                "Welcome!",
+                JOptionPane.PLAIN_MESSAGE);
+    }
+    
+    public static int menu(){
+        //set possibilities in the drop down menu
+        Object[] possibilities = 
+        {"Single Player", "Multiplayer", "Options", "Exit"};
+        
+        int var = 0;
+        String s = (String)JOptionPane.showInputDialog(
+                    null,
+                    "Menu:",
+                    "Game Options",
+                    JOptionPane.PLAIN_MESSAGE, 
+                    null,
+                    possibilities, "Single Player");
+        switch(s){
+            case "Single Player":   var = 1;
+                break;
+            case "Multiplayer":     var = 2;
+                break;
+            case "Options":         var = 3;
+                break;
+            case "Exit":            var = 4;
+        }
+        return var;
+    }
+    
+
+    public static int singleplayer(int count){
+        int count1 = 0;
+        int ct = count;
+        //create int array length equal to whatever count is
+        int[] correct = new int[count];
+        //create color variable, initialize to no color
+        Color color = null;
+        //create string array length count
+        String[] colors = new String[count];
+        int a = 0;
+        
+        //set our fram of colors to have title "Copycat" and a basic rectangle
+        //average size, and centered
+        JFrame frame = new JFrame("CopyCat");
+        frame.setSize(200, 150);
+        frame.setLocationRelativeTo(null);
+        
+        while (count > 0){
+            color = randomColor();
+            if(color == Color.blue){
+                colors[a] = "Blue";
+            }
+            else if(color == Color.red){
+                colors[a] = "Red";
+            }
+            else if(color == Color.green){
+                colors[a] = "Green";
+            }
+            else if(color == Color.yellow){
+                colors[a] = "Yellow";
+            }
+            //sets color of the frame equal to what color equals to. makes frame
+            //visible on screen
+            frame.getContentPane().setBackground(color);
+            frame.setVisible(true);
+            //3/4 seconds delay
+            try {
+                Thread.sleep(750);
+            } 
+            catch(InterruptedException ex) {
+                Thread.currentThread().interrupt();
+            }
+            //hide it
+            frame.setVisible(false);
+            //1/2 second delay
+            try {
+                Thread.sleep(250);
+            } 
+            catch(InterruptedException ex) {
+                Thread.currentThread().interrupt();
+            }
+            count--;
+            a++;
+        }
+        
+        JOptionPane.showMessageDialog(null, 
+            "Do you remember to color code? Let's find out!",
+            "",JOptionPane.PLAIN_MESSAGE);
+        
+        while(count1 < ct){
+            Object[] possibilities = {"Blue", "Red", "Yellow", "Green"};
+            String s = (String)JOptionPane.showInputDialog(
+                    null,"","",
+                    JOptionPane.PLAIN_MESSAGE, null,
+                    possibilities, "Blue");
+            if(s.equals(colors[count1]))
+                {correct[count1] = 0;}
+            else
+                {correct[count1] = 1;}
+            
+            count1++;
+        }
+        int check = 0;
+        for(int i = 0; i < correct.length; i++){
+            check += correct[i];
+        }
+        if(check>0){
+            return 1;
+        }
+        else{
+            return 0;
+        }
+    }
+    
+    public static void multiplayer(int beg){
+        score1 = 0;
+        score2 = 0;
+        String player1 = JOptionPane.showInputDialog(null, 
+                "Player 1, what is your name?",
+                "Multiplayer",
+                JOptionPane.PLAIN_MESSAGE);
+        String player2 = JOptionPane.showInputDialog(null, 
+                "Hello " + player1 + ". And who will you be facing today?",
+                "Multiplayer",
+                JOptionPane.PLAIN_MESSAGE);
+        Object[] possibilities = {"Easy", "Medium", "Hard", "Insane"};
+        String difficulty = (String)JOptionPane.showInputDialog(
+                    null,
+                    "Hello " + player2 + ". How would you like the gameplay?",
+                    "Multiplayer Options",
+                    JOptionPane.PLAIN_MESSAGE, 
+                    null,
+                    possibilities, "Easy");
+        int count = 4;
+        int round_tracker = 1;
+        switch(difficulty){
+            case "Easy":    
+                multiplayer_easy(player1, player2, count, round_tracker,
+                        score1, score2);
+                break;
+            /*case "Medium":    multiplayer_medium();
+                break;
+            case "Hard":    multiplayer_hard();
+                break;
+            case "Insane":    multiplayer_insane();
+                break;*/
+        } 
+    }
+    public static void multiplayer_easy(String player1, String player2,
+            int rounds, int round_counter, int score1, int score2){
+        int score_player_1 = score1;
+        int score_player_2 = score2;
+        int round = rounds;
+        int round_tracker = round_counter;
+        int count = rounds;
+        int count1 = count;
+        int ct = count;
+        int[] correct = new int[rounds];
+        Color color = null;
+        String[] colors = new String[rounds];
+        int i = 0;
+        String[] COLOR_CODE = new String[rounds];
+        JFrame frame = new JFrame("CopyCat");
+        frame.setSize(200, 150);
+        frame.setLocationRelativeTo(null);
+        while(count > 0){
+            Object[] possibilities = {"Blue", "Red", "Yellow", "Green"};
+            COLOR_CODE[i++] = (String)JOptionPane.showInputDialog(null,
+                    player1 + ", enter the Color Code for " 
+                            + player2 + " to guess!"
+                    ,"Player 1", JOptionPane.PLAIN_MESSAGE, 
+                    null, possibilities, "Blue");
+            count--;
+        }
+        JOptionPane.showMessageDialog(null, 
+            player2 + ", press OK when ready.",
+            "",JOptionPane.PLAIN_MESSAGE);
+        while (count1 > 0 && count < rounds){
+            if(COLOR_CODE[count].equals("Blue")){
+                color = Color.blue;
+            }
+            else if(COLOR_CODE[count].equals("Red")){
+                color = Color.red;
+            }
+            else if(COLOR_CODE[count].equals("Green")){
+                color = Color.green;
+            }
+            else if(COLOR_CODE[count].equals("Yellow")){
+                color = Color.yellow;
+            }
+            //sets color of the frame equal to what color equals to. makes frame
+            //visible on screen
+            frame.getContentPane().setBackground(color);
+            frame.setVisible(true);
+            //3/4 seconds delay
+            try {
+                Thread.sleep(750);
+            } 
+            catch(InterruptedException ex) {
+                Thread.currentThread().interrupt();
+            }
+            //hide it
+            frame.setVisible(false);
+            //1/2 second delay
+            try {
+                Thread.sleep(250);
+            } 
+            catch(InterruptedException ex) {
+                Thread.currentThread().interrupt();
+            }
+            count1--;
+            count++;
+        }
+        JOptionPane.showMessageDialog(null, 
+            player2 + ", do you remember to color code? Let's find out!",
+            "",JOptionPane.PLAIN_MESSAGE);
+        
+        while(count1 < ct){
+            Object[] possibilities = {"Blue", "Red", "Yellow", "Green"};
+            String s = (String)JOptionPane.showInputDialog(
+                    null,"","",
+                    JOptionPane.PLAIN_MESSAGE, null,
+                    possibilities, "Blue");
+            if(s.equals(COLOR_CODE[count1]))
+                {correct[count1] = 0;}
+            else
+                {correct[count1] = 1;}
+            
+            count1++;
+        }
+        int check = 0;
+        for(int j = 0; j < correct.length; j++){
+            check += correct[j];
+        }
+        
+        count = rounds;
+        count1 = count;
+        ct = count;
+        correct = new int[rounds];
+        color = null;
+        colors = new String[rounds];
+        i = 0;
+        COLOR_CODE = new String[rounds];
+        
+        while(count > 0){
+            Object[] possibilities = {"Blue", "Red", "Yellow", "Green"};
+            COLOR_CODE[i++] = (String)JOptionPane.showInputDialog(null,
+                    player2 + ", enter the Color Code for " 
+                            + player1 + " to guess!"
+                    ,"Player 1", JOptionPane.PLAIN_MESSAGE, 
+                    null, possibilities, "Blue");
+            count--;
+        }
+        JOptionPane.showMessageDialog(null, 
+            player2 + ", press OK when ready.",
+            "",JOptionPane.PLAIN_MESSAGE);
+        while (count1 > 0 && count < rounds){
+            if(COLOR_CODE[count].equals("Blue")){
+                color = Color.blue;
+            }
+            else if(COLOR_CODE[count].equals("Red")){
+                color = Color.red;
+            }
+            else if(COLOR_CODE[count].equals("Green")){
+                color = Color.green;
+            }
+            else if(COLOR_CODE[count].equals("Yellow")){
+                color = Color.yellow;
+            }
+            //sets color of the frame equal to what color equals to. makes frame
+            //visible on screen
+            frame.getContentPane().setBackground(color);
+            frame.setVisible(true);
+            //3/4 seconds delay
+            try {
+                Thread.sleep(750);
+            } 
+            catch(InterruptedException ex) {
+                Thread.currentThread().interrupt();
+            }
+            //hide it
+            frame.setVisible(false);
+            //1/2 second delay
+            try {
+                Thread.sleep(250);
+            } 
+            catch(InterruptedException ex) {
+                Thread.currentThread().interrupt();
+            }
+            count1--;
+            count++;
+        }
+        JOptionPane.showMessageDialog(null, 
+            player1 + ", do you remember to color code? Let's find out!",
+            "",JOptionPane.PLAIN_MESSAGE);
+        
+        while(count1 < ct){
+            Object[] possibilities = {"Blue", "Red", "Yellow", "Green"};
+            String s = (String)JOptionPane.showInputDialog(
+                    null,"","",
+                    JOptionPane.PLAIN_MESSAGE, null,
+                    possibilities, "Blue");
+            if(s.equals(COLOR_CODE[count1]))
+                {correct[count1] = 0;}
+            else
+                {correct[count1] = 1;}
+            
+            count1++;
+        }
+        int check1 = 0;
+        for(int j = 0; j < correct.length; j++){
+            check1 += correct[j];
+        }
+        //check scores
+        if(check == 1 && check1 == 1){
+            JOptionPane.showMessageDialog(null, 
+            "You both lose round " + round_tracker + "!"
+                    + "\n" + player1 + ": " + score_player_1 + "     " 
+                    +player2 + ": " + score_player_2,
+            "",JOptionPane.PLAIN_MESSAGE);
+        }
+        else if(check == 1 && check1 == 0){
+            score_player_1++;
+            JOptionPane.showMessageDialog(null, 
+            player1 + " wins round " + round_tracker + "!"
+                    + "\n" + player1 + ": " + score_player_1 + "     " 
+                    +player2 + ": " + score_player_2,
+            "",JOptionPane.PLAIN_MESSAGE);
+        }
+        else if(check == 0 && check1 == 1){
+            score_player_2++;
+            JOptionPane.showMessageDialog(null, 
+            player2 + " wins round " + round_tracker + "!"
+                    + "\n" + player1 + ": " + score_player_1 + "     " 
+                    + player2 + ": " + score_player_2,
+            "",JOptionPane.PLAIN_MESSAGE);
+        }
+        else if(check == 0 && check1 == 0){
+            score_player_1++;
+            score_player_2++;
+            JOptionPane.showMessageDialog(null, 
+            "You both win round " + round_tracker + "!"
+                    + "\n" + player1 + ": " + score_player_1 + "     " 
+                    +player2 + ": " + score_player_2,
+            "",JOptionPane.PLAIN_MESSAGE);
+        }
+        int score_board;
+        if(round_tracker!=5){
+            round_tracker++;
+            round++;
+            multiplayer_easy(player1, player2, round, round_tracker,
+                score_player_1, score_player_2);
+        }
+        else{
+            score_board = score_player_1 - score_player_2;
+            if(score_board == 0){
+                JOptionPane.showMessageDialog(null, 
+                        "The series is a tie!",
+                        "",JOptionPane.PLAIN_MESSAGE);
+            }
+            else if(score_board > 0){
+                JOptionPane.showMessageDialog(null, 
+                        player1 + " wins the series!",
+                        "",JOptionPane.PLAIN_MESSAGE);
+            }
+            else if(score_board < 0){
+                JOptionPane.showMessageDialog(null, 
+                       player2 + "wins the series!",
+                        "",JOptionPane.PLAIN_MESSAGE);
+            }
+        }
+    }
+    
+    /*public static void multiplayer_medium(){
+        
+    }
+    
+    public static void multiplayer_hard(){
+        
+    }
+    
+    public static void multiplayer_insane(){
+        
+    }*/
+    
+    public static int options(){
+        Object[] possibilities1 = {"Creators", "Set Timer", "Info"};
+        int var = 0;
+        String s = (String)JOptionPane.showInputDialog(
+                    null,
+                    "Options",
+                    "What would you like to know?",
+                    JOptionPane.PLAIN_MESSAGE, 
+                    null,
+                    possibilities1, "Single Player");
+        
+        switch(s)
+        {
+            case "Creaters":    var = 1;
+                break;
+            case "Set Timer":   var = 2;
+                break;
+            case "Info":        var = 3;
+                break;
+        }
+        return var;
+    }
+    
+    public static Color randomColor(){
+        //red blue green yellow
+        Color color = null;
+        Random r = new Random();
+        int Low = 1;
+        int High = 5;
+        int R = r.nextInt(High-Low) + Low;
+        switch (R)
+        {
+            case 1: color = red;
+                break;
+            case 2: color = blue;
+                break;
+            case 3: color = green;
+                break;
+            case 4: color = yellow;
+                break;
+        }
+        return color;
+    }
+    
+    public static String highscores(String name, int rec) 
+            throws FileNotFoundException, IOException{
+        //initialize variables
+        int temp1;
+        String temp2;
+        int ct = 1;
+        boolean done = false;
+        
+        //read files where data is stored
+        Scanner scanScore = new Scanner(new File("C:\\Users\\Ayman\\Documents"
+                + "\\CopyCat\\CopyCat\\highscoreslist.txt"));
+        File file = new File("C:\\Users\\Ayman\\Documents\\Copy"
+                + "Cat\\CopyCat\\nameslist.txt");
+        FileInputStream in = new FileInputStream(file);
+        BufferedReader br = new BufferedReader(new InputStreamReader(in));
+        Scanner scanName = new Scanner(in);
+        int j = 0;
+        int n = 0;
+        while(scanScore.hasNextInt()){
+            scores[j++] = scanScore.nextInt();
+        }
+        while (scanName.hasNextLine()) {
+            names[n++] = scanName.nextLine();
+        }
+        if (rec > 0 && name != null){
+            for(int i = 0; i<3; i++){
+                
+                if(rec >= scores[i] && !done){
+                    
+                    if(i == 0){
+                        //change data on scores list
+                        temp1 = scores[i+1];
+                        scores[i+1] = scores[i];
+                        scores[i] = rec;
+                        scores[i+2] = temp1;
+                        
+                        //change data on names list
+                        temp2 = names[i+1];
+                        names[i+1] = names[i];
+                        names[i] = name;
+                        names[i+2] = temp2;
+                    }
+                    else if(i == 1){
+                        //scores list
+                        scores[i+1] = scores[i];
+                        scores[i] = rec;
+                        
+                        //names list
+                        names[i+1] = names[i];
+                        names[i] = name;
+                    }
+                    else if(i == 2){
+                        //scores
+                        scores[i] = rec;
+                        
+                        //names
+                        names[i] = name;
+                    }
+                    done = true;
+                }
+                else{}
+                
+            }
+            BufferedWriter outputWriter1;
+            PrintWriter outputWriter2;
+            outputWriter1 = new BufferedWriter(new FileWriter(
+                    "C:\\Users\\Ayman\\Documents\\Copy"+""
+                            + "Cat\\CopyCat\\highscoreslist.txt"));
+            outputWriter2 = new PrintWriter(new FileWriter(
+                    "C:\\Users\\Ayman\\Documents\\Copy"+""
+                            + "Cat\\CopyCat\\nameslist.txt"));
+            for (int i = 0; i < scores.length; i++) {
+                outputWriter1.write(Integer.toString(scores[i]));
+                outputWriter1.newLine();
+                outputWriter2.write(names[i] + "\n");
+            }
+            outputWriter1.flush();  
+            outputWriter1.close();
+            outputWriter2.flush();  
+            outputWriter2.close(); 
+        }
+        return "High Scores\n"
+                + "------------\n" 
+                + "1" + ". " + scores[0] + " - " + names[0] + "\n" 
+                + "2" + ". " + scores[1] + " - " + names[1] + "\n"
+                + "3" + ". " + scores[2] + " - " + names[2];
+    }
+}
