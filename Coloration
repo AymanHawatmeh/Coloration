@@ -1,0 +1,94 @@
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import javax.swing.JOptionPane;
+
+
+public class Coloration extends Classes {
+    static int beg;
+    static int round;
+    
+    public static void main(String[] args) throws FileNotFoundException, IOException{
+        //calls welcome method
+        welcome();
+        boolean end = false;
+        
+        boolean playagain = true;
+        //set var equal to selected option from menu()
+        while(!end && playagain == true){
+            beg = 4;
+            round = 1;
+            int var = menu();
+            int win = 0;
+            //if else statements to decide which was selected from menu
+            if(var == 1)
+                win = singleplayer(beg);
+            else if(var == 2)
+                multiplayer(beg);
+            else if (var == 3)
+                option();
+            else{
+                System.exit(0);
+                end = true;
+            }
+            if(var == 1){
+                switch(win){
+                    case 0: victory();
+                        break;
+                    case 1: playagain = defeat();
+                        break;
+            }
+            }
+            if(playagain == false){
+                System.exit(0);
+            }
+        }
+    }
+    public static void option(){
+        int var = options();
+    }
+    public static void victory() throws FileNotFoundException, IOException{
+        beg += 1;
+        round += 1;
+        
+        int win;
+        JOptionPane.showMessageDialog(null, 
+                "You win! Moving on to round " + round,
+                "Correct!",
+                JOptionPane.PLAIN_MESSAGE);
+        win = singleplayer(beg);
+        switch(win){
+            case 0: victory();
+                break;
+            case 1: defeat();
+                break;
+        }
+        
+    }
+    public static boolean defeat() throws FileNotFoundException, IOException{
+        round--;
+        String highscore;
+        boolean playagain = false;
+        String name = JOptionPane.showInputDialog(null, 
+                "You completed " + round + " round(s)",
+                "Incorrect!",
+                JOptionPane.PLAIN_MESSAGE);
+        
+        highscore = highscores(name, round);
+        Object[] possibilities = {"Play Again", "Exit"};
+        String play = (String)JOptionPane.showInputDialog(
+                    null,
+                    highscore,
+                    "Highscores",
+                    JOptionPane.PLAIN_MESSAGE, 
+                    null,
+                    possibilities, "Play Again");
+        switch(play){
+            case "Play Again":  playagain = true;
+                break;
+            case "Exit":        playagain = false;
+                break;
+        }
+        return playagain;
+    }
+    
+}
